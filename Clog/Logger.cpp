@@ -11,6 +11,9 @@
 
 #include "concurrentqueue.h"
 
+#include <windows.h>
+#include <DbgHelp.h>
+
 namespace fs = std::filesystem;
 
 
@@ -68,6 +71,7 @@ public:
 
 				file << log.timestamp
 					<< " [" << LogLevelToString(log.level) << "] "
+					<< " [" << log.fileName << "] "
 					<< "[" << log.threadId << "] "
 					<< log.function
 					<< " : "
@@ -92,6 +96,7 @@ public:
 			OpenLogFileIfNeeded();
 			file << log.timestamp
 				<< " [" << LogLevelToString(log.level) << "] "
+				<< " [" << log.fileName << "] "
 				<< "[" << log.threadId << "] "
 				<< log.function
 				<< " : "
@@ -166,6 +171,7 @@ public:
 			}
 		}
 	}
+
 };
 
 /* ---------------- Logger 对外实现 ---------------- */
@@ -180,6 +186,13 @@ Logger::Logger()
 	: m_impl(std::make_unique<Impl>())
 {
 }
+
+std::string Logger::GetFileName(const char* fileName)
+{
+	const char* name = strrchr(fileName, '\\');
+	return name ? name + 1 : fileName;
+}
+
 
 Logger::~Logger()
 {
@@ -204,7 +217,8 @@ void Logger::Init(const std::string& projectName,
 
 void Logger::Log(LogLevel level,
 	const char* function,
-	const std::string& msg)
+	const std::string& msg,
+	const char* fileName)
 {
 	auto& impl = *m_impl;
 
@@ -232,6 +246,7 @@ void Logger::Log(LogLevel level,
 	log.function = function;
 	log.message = msg;
 	log.threadId = std::this_thread::get_id();
+	log.fileName = GetFileName(fileName);//GetModuleNameFromCaller(caller);
 
 	impl.queue.enqueue(std::move(log));
 }
@@ -263,3 +278,4 @@ void Logger::Shutdown()
 		impl.worker.join();
 	}
 }
+

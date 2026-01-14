@@ -18,6 +18,7 @@ struct LogMessage
 {
 	LogLevel level;
 	std::thread::id threadId;
+	std::string fileName;
 	std::string timestamp;
 	std::string function;
 	std::string message;

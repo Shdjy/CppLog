@@ -23,7 +23,8 @@ public:
 
 	void Log(LogLevel level,
 		const char* function,
-		const std::string& msg);
+		const std::string& msg,
+		const char * fileName);
 
 	void SetLogLevel(LogLevel level);
 
@@ -37,6 +38,7 @@ private:
 	Logger(const Logger&) = delete;
 	Logger& operator=(const Logger&) = delete;
 
+	std::string GetFileName(const char* fileName);
 private:
 	class Impl;
 	std::unique_ptr<Impl> m_impl;

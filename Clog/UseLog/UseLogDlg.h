@@ -36,4 +36,6 @@ public:
 	afx_msg void OnBnClickedButton2();
 	CComboBox m_comboxLevel;
 	afx_msg void OnCbnSelchangeCombo1();
+	afx_msg void OnBnClickedButton3();
+	afx_msg void OnBnClickedButton4();
 };

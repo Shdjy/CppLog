@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Concurrentqueue">
-      <UniqueIdentifier>{86b0be24-cc80-4f4b-82a3-a694646b9d69}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -24,22 +21,7 @@
     <ClInclude Include="pch.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="LogLevel.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="LoggerMacros.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="blockingconcurrentqueue.h">
-      <Filter>Concurrentqueue</Filter>
-    </ClInclude>
-    <ClInclude Include="concurrentqueue.h">
-      <Filter>Concurrentqueue</Filter>
-    </ClInclude>
-    <ClInclude Include="CrashHandler.h">
+    <ClInclude Include="Calculator.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -50,10 +32,7 @@
     <ClCompile Include="pch.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Logger.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CrashHandler.cpp">
+    <ClCompile Include="Calculator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

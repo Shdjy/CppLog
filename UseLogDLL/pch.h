@@ -8,14 +8,9 @@
 #define PCH_H
 
 // 添加要在此处预编译的标头
-#include <thread>
-
-
 #include "framework.h"
-
 #include "LoggerMacros.h"
 #include "Logger.h"
-#include "LogLevel.h"
-#include "CrashHandler.h"
-#include "Calculator.h"
+
+#include <intrin.h>
 #endif //PCH_H

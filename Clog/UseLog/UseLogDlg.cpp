@@ -72,6 +72,8 @@ BEGIN_MESSAGE_MAP(CUseLogDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &CUseLogDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CUseLogDlg::OnBnClickedButton2)
 	ON_CBN_SELCHANGE(IDC_COMBO1, &CUseLogDlg::OnCbnSelchangeCombo1)
+	ON_BN_CLICKED(IDC_BUTTON3, &CUseLogDlg::OnBnClickedButton3)
+	ON_BN_CLICKED(IDC_BUTTON4, &CUseLogDlg::OnBnClickedButton4)
 END_MESSAGE_MAP()
 
 
@@ -206,4 +208,21 @@ void CUseLogDlg::OnCbnSelchangeCombo1()
 	LOG_INFO(std::to_string(level));
 	//Logger::Instance().SetLogLevel((LogLevel)level);
 	LOG_SETLEVEL((LogLevel)level);
+}
+
+
+void CUseLogDlg::OnBnClickedButton3()
+{
+	// TODO: 在此添加控件通知处理程序代
+	int* p = nullptr;
+	*p = 123;
+}
+
+
+void CUseLogDlg::OnBnClickedButton4()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	Calculator cal;
+	int result = cal.Add(12, 13);
+	LOG_INFO("计算结果:" + std::to_string(result));
 }

@@ -52,6 +52,9 @@ BOOL CUseLogApp::InitInstance()
 	InitCommonControlsEx(&InitCtrls);
 
 	CWinApp::InitInstance();
+	//日志初始化
+	InstallCrashHandler();
+
 	Logger::Instance().Init("logTest", "./logs", LogLevel::Debug);
 
 
