@@ -98,7 +98,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>D:\code for github\CppLog\Clog\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\code for github\CppLog\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Clog.lib;UseLogDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>

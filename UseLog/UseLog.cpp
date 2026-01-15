@@ -38,6 +38,19 @@ CUseLogApp theApp;
 
 
 // CUseLogApp 初始化
+void CreateConsole()
+{
+	AllocConsole();
+
+	FILE* fp;
+	freopen_s(&fp, "CONOUT$", "w", stdout);
+	freopen_s(&fp, "CONOUT$", "w", stderr);
+	freopen_s(&fp, "CONIN$", "r", stdin);
+
+	std::cout.clear();
+	std::cerr.clear();
+	std::cin.clear();
+}
 
 BOOL CUseLogApp::InitInstance()
 {
@@ -52,9 +65,10 @@ BOOL CUseLogApp::InitInstance()
 	InitCommonControlsEx(&InitCtrls);
 
 	CWinApp::InitInstance();
+	//CreateConsole();
+	//std::cout << "控制台已经创建" << std::endl;
 	//日志初始化
 	InstallCrashHandler();
-
 	Logger::Instance().Init("logTest", "./logs", LogLevel::Debug);
 
 

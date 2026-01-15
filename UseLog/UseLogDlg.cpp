@@ -74,6 +74,9 @@ BEGIN_MESSAGE_MAP(CUseLogDlg, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_COMBO1, &CUseLogDlg::OnCbnSelchangeCombo1)
 	ON_BN_CLICKED(IDC_BUTTON3, &CUseLogDlg::OnBnClickedButton3)
 	ON_BN_CLICKED(IDC_BUTTON4, &CUseLogDlg::OnBnClickedButton4)
+	ON_BN_CLICKED(IDC_BUTTON5, &CUseLogDlg::OnBnClickedButton5)
+	ON_BN_CLICKED(IDC_BUTTON6, &CUseLogDlg::OnBnClickedButton6)
+	ON_BN_CLICKED(IDC_BUTTON7, &CUseLogDlg::OnBnClickedButton7)
 END_MESSAGE_MAP()
 
 
@@ -225,4 +228,37 @@ void CUseLogDlg::OnBnClickedButton4()
 	Calculator cal;
 	int result = cal.Add(12, 13);
 	LOG_INFO("计算结果:" + std::to_string(result));
+
+}
+
+void AttachToParentConsole()
+{
+	if (AttachConsole(ATTACH_PARENT_PROCESS))
+	{
+		FILE* fp;
+		freopen_s(&fp, "CONOUT$", "w", stdout);
+		freopen_s(&fp, "CONOUT$", "w", stderr);
+	}
+}
+
+void CUseLogDlg::OnBnClickedButton5()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	//ConsoleManager::Close();
+	CONSOLE_CLOSE;
+}
+
+
+void CUseLogDlg::OnBnClickedButton6()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	std::cout << "测试输出" << std::endl;
+}
+
+
+void CUseLogDlg::OnBnClickedButton7()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	ConsoleManager::Open();
+	CONSOLE_OPEN;
 }

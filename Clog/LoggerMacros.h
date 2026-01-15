@@ -9,4 +9,8 @@
 
 #define LOG_SETLEVEL(level) Logger::Instance().SetLogLevel(level)
 
+#define CONSOLE_OPEN ConsoleManager::Open()
+#define CONSOLE_CLOSE ConsoleManager::Close()
+
+
 

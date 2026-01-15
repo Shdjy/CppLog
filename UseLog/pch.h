@@ -18,4 +18,5 @@
 #include "LogLevel.h"
 #include "CrashHandler.h"
 #include "Calculator.h"
+#include "ConsoleManager.h"
 #endif //PCH_H
