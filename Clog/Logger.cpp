@@ -3,19 +3,13 @@
 
 #include <atomic>
 #include <chrono>
-#include <filesystem>
-#include <fstream>
 #include <iomanip>
-#include <sstream>
 #include <thread>
 
 #include "concurrentqueue.h"
 
 #include <windows.h>
 #include <DbgHelp.h>
-
-namespace fs = std::filesystem;
-
 
 /* ---------------- Impl ∂®“Â ---------------- */
 
@@ -32,6 +26,8 @@ public:
 	std::string projectName;
 	std::string basePath;
 	std::string currentDate;
+
+	std::unique_ptr<LogSink> m_sink;
 
 	LogLevel minLevel{ LogLevel::Info };
 
@@ -67,21 +63,12 @@ public:
 			while (queue.try_dequeue(log))
 			{
 				hasData = true;
-				OpenLogFileIfNeeded();
-
-				file << log.timestamp
-					<< " [" << LogLevelToString(log.level) << "] "
-					<< " [" << log.fileName << "] "
-					<< "[" << log.threadId << "] "
-					<< log.function
-					<< " : "
-					<< log.message
-					<< std::endl;
+				m_sink->Write(log);
 			}
 
 			if (hasData)
 			{
-				file.flush();
+				m_sink->Flush();
 			}
 			else
 			{
@@ -93,21 +80,10 @@ public:
 		LogMessage log;
 		while (queue.try_dequeue(log))
 		{
-			OpenLogFileIfNeeded();
-			file << log.timestamp
-				<< " [" << LogLevelToString(log.level) << "] "
-				<< " [" << log.fileName << "] "
-				<< "[" << log.threadId << "] "
-				<< log.function
-				<< " : "
-				<< log.message
-				<< std::endl;
+			m_sink->Write(log);
 		}
 
-		if (file.is_open())
-		{
-			file.flush();
-		}
+		m_sink->Flush();
 	}
 
 	void OpenLogFileIfNeeded()
@@ -213,6 +189,9 @@ void Logger::Init(const std::string& projectName,
 
 	impl.running = true;
 	impl.worker = std::thread(&Impl::WorkerThread, &impl);
+
+	impl.m_sink.reset(new FileSink());
+	impl.m_sink->SetSinkInfo(basePath + "/" + projectName);
 }
 
 void Logger::Log(LogLevel level,

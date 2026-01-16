@@ -12,6 +12,16 @@
 #include "CrashHandler.h"
 #include "Logger.h"
 #include "LoggerMacros.h"
+#include "LogSink.h"
+#include "FileSink.h"
 
 #include <intrin.h>
+#include <sstream>
+#include <filesystem>
+#include <fstream>
+#include <memory>
+
+
+namespace fs = std::filesystem;
+
 #endif //PCH_H

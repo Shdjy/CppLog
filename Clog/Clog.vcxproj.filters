@@ -45,6 +45,12 @@
     <ClInclude Include="ConsoleManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="LogSink.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSink.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -60,6 +66,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ConsoleManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LogSink.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSink.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
