@@ -11,6 +11,7 @@
 #include <windows.h>
 #include <DbgHelp.h>
 
+
 /* ---------------- Impl ∂®“Â ---------------- */
 
 class Logger::Impl
@@ -23,36 +24,16 @@ public:
 
 	std::ofstream file;
 
+	Sink m_sinkWay = Sink::FileSink;
 	std::string projectName;
 	std::string basePath;
 	std::string currentDate;
 
-	std::unique_ptr<LogSink> m_sink;
+	std::unique_ptr<LogSink> m_logSink;
 
 	LogLevel minLevel{ LogLevel::Info };
 
 public:
-	inline const char* LogLevelToString(LogLevel level)
-	{
-		switch (level)
-		{
-		case LogLevel::Trace:
-			return "TRACE";
-		case LogLevel::Debug:
-			return "DEBUG";
-		case LogLevel::Info:
-			return "INFO";
-		case LogLevel::Warn:
-			return "WARN";
-		case LogLevel::Error:
-			return "ERROR";
-		case LogLevel::Fatal:
-			return "FATAL";
-		default:
-			return "UNKNOWN";
-		}
-	}
-
 	void WorkerThread()
 	{
 		while (running)
@@ -63,12 +44,12 @@ public:
 			while (queue.try_dequeue(log))
 			{
 				hasData = true;
-				m_sink->Write(log);
+				m_logSink->Write(log);
 			}
 
 			if (hasData)
 			{
-				m_sink->Flush();
+				m_logSink->Flush();
 			}
 			else
 			{
@@ -80,43 +61,10 @@ public:
 		LogMessage log;
 		while (queue.try_dequeue(log))
 		{
-			m_sink->Write(log);
+			m_logSink->Write(log);
 		}
 
-		m_sink->Flush();
-	}
-
-	void OpenLogFileIfNeeded()
-	{
-		auto now = std::chrono::system_clock::now();
-		auto t = std::chrono::system_clock::to_time_t(now);
-
-		std::tm tm{};
-#ifdef _WIN32
-		localtime_s(&tm, &t);
-#else
-		localtime_r(&t, &tm);
-#endif
-
-		std::ostringstream oss;
-		oss << std::put_time(&tm, "%Y-%m-%d");
-
-		std::string date = oss.str();
-		if (date == currentDate && file.is_open())
-		{
-			return;
-		}
-
-		if (file.is_open())
-		{
-			file.close();
-		}
-
-		currentDate = date;
-		fs::create_directories(basePath + "/" + projectName);
-
-		std::string path = basePath + "/" + projectName + "/" + date + ".log";
-		file.open(path, std::ios::app);
+		m_logSink->Flush();
 	}
 
 	void CleanupOldLogs()
@@ -179,6 +127,7 @@ void Logger::Init(const std::string& projectName,
 	const std::string& basePath,
 	LogLevel minLevel)
 {
+	InstallCrashHandler();
 	auto& impl = *m_impl;
 
 	impl.projectName = projectName;
@@ -190,14 +139,16 @@ void Logger::Init(const std::string& projectName,
 	impl.running = true;
 	impl.worker = std::thread(&Impl::WorkerThread, &impl);
 
-	impl.m_sink.reset(new FileSink());
-	impl.m_sink->SetSinkInfo(basePath + "/" + projectName);
+	m_sinkInfo = basePath + "/" + projectName;
+	impl.m_logSink = std::make_unique<FileSink>();//reset(new FileSink());
+	impl.m_logSink->SetSinkInfo(m_sinkInfo);
 }
 
 void Logger::Log(LogLevel level,
 	const char* function,
 	const std::string& msg,
-	const char* fileName)
+	const char* fileName,
+	long line)
 {
 	auto& impl = *m_impl;
 
@@ -226,14 +177,43 @@ void Logger::Log(LogLevel level,
 	log.message = msg;
 	log.threadId = std::this_thread::get_id();
 	log.fileName = GetFileName(fileName);//GetModuleNameFromCaller(caller);
+	log.line = line;
 
 	impl.queue.enqueue(std::move(log));
 }
+
 
 void Logger::SetLogLevel(LogLevel level)
 {
 	auto& impl = *m_impl;
 	impl.minLevel = level;
+}
+
+
+void Logger::SetSink(Sink sink)
+{
+	if (m_impl->m_sinkWay == sink)
+	{
+		return;
+	}
+	m_impl->m_sinkWay = sink;
+	switch (sink)
+	{
+	case Sink::FileSink:
+		m_impl->m_logSink.reset(new FileSink());
+		m_impl->m_logSink->SetSinkInfo(m_sinkInfo);
+		break;
+	case Sink::ConsoleSink:
+		m_impl->m_logSink.reset(new ConsoleSink());
+		m_impl->m_logSink->SetSinkInfo(m_sinkInfo);
+		break;
+	case Sink::DebugViewSink:
+		break;
+	case Sink::UDPSink:
+		break;
+	default:
+		break;
+	}	
 }
 
 void Logger::Flush()

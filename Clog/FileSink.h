@@ -5,9 +5,10 @@
 class FileSink :
     public LogSink
 {
-
 public:
     FileSink();
+    //explicit FileSink(const std::string& sinkInfo);
+    ~FileSink();
     void Write(const LogMessage& msg) override;
     void Flush() override;
 

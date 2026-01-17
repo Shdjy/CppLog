@@ -14,6 +14,8 @@
 #include "LoggerMacros.h"
 #include "LogSink.h"
 #include "FileSink.h"
+#include "ConsoleSink.h"
+#include "ConsoleManager.h"
 
 #include <intrin.h>
 #include <sstream>

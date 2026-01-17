@@ -68,7 +68,7 @@ BOOL CUseLogApp::InitInstance()
 	//CreateConsole();
 	//std::cout << "控制台已经创建" << std::endl;
 	//日志初始化
-	InstallCrashHandler();
+	//InstallCrashHandler();
 	Logger::Instance().Init("logTest", "./logs", LogLevel::Debug);
 
 

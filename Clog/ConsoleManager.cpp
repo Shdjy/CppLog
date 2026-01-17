@@ -4,6 +4,7 @@
 #include <iostream>
 
 bool ConsoleManager::s_opened = false;
+void* ConsoleManager::m_hConsole = nullptr;
 
 BOOL WINAPI ConsoleManager::CtrlHandler(DWORD ctrlType)
 {
@@ -72,6 +73,7 @@ void ConsoleManager::Open()
 
 	SetConsoleTitleW(L"Debug Console");
 
+	m_hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	s_opened = true;
 	DisableCloseButton();
 }
@@ -96,4 +98,34 @@ void ConsoleManager::Close()
 bool ConsoleManager::IsOpen()
 {
 	return s_opened;
+}
+
+WORD ConsoleManager::GetCurrentColor(HANDLE hConsole)
+{
+	CONSOLE_SCREEN_BUFFER_INFO info;
+	GetConsoleScreenBufferInfo(hConsole, &info);
+	return info.wAttributes;
+}
+
+void ConsoleManager::SetColorByLevel(LogLevel level)
+{
+	WORD color = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+
+	switch (level)
+	{
+	case LogLevel::Info:
+		color = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+		break;
+	case LogLevel::Warn:
+		color = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+		break;
+	case LogLevel::Error:
+	case LogLevel::Fatal:
+		color = FOREGROUND_RED | FOREGROUND_INTENSITY;
+		break;
+	default:
+		break;
+	}
+
+	SetConsoleTextAttribute(m_hConsole, color);
 }

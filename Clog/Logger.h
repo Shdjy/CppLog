@@ -24,9 +24,11 @@ public:
 	void Log(LogLevel level,
 		const char* function,
 		const std::string& msg,
-		const char * fileName);
+		const char* fileName,
+		long line);
 
 	void SetLogLevel(LogLevel level);
+	void SetSink(Sink sink);
 
 	void Flush();
 	void Shutdown();
@@ -39,6 +41,8 @@ private:
 	Logger& operator=(const Logger&) = delete;
 
 	std::string GetFileName(const char* fileName);
+
+	std::string m_sinkInfo;
 private:
 	class Impl;
 	std::unique_ptr<Impl> m_impl;

@@ -63,6 +63,7 @@ void CUseLogDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_COMBO1, m_comboxLevel);
+	DDX_Control(pDX, IDC_COMBO2, m_comboxSink);
 }
 
 BEGIN_MESSAGE_MAP(CUseLogDlg, CDialogEx)
@@ -77,6 +78,7 @@ BEGIN_MESSAGE_MAP(CUseLogDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON5, &CUseLogDlg::OnBnClickedButton5)
 	ON_BN_CLICKED(IDC_BUTTON6, &CUseLogDlg::OnBnClickedButton6)
 	ON_BN_CLICKED(IDC_BUTTON7, &CUseLogDlg::OnBnClickedButton7)
+	ON_CBN_SELCHANGE(IDC_COMBO2, &CUseLogDlg::OnCbnSelchangeCombo2)
 END_MESSAGE_MAP()
 
 
@@ -113,6 +115,11 @@ BOOL CUseLogDlg::OnInitDialog()
 	m_comboxLevel.AddString("Error");
 	m_comboxLevel.AddString("Fatal");
 	m_comboxLevel.SetCurSel(1);
+	
+	m_comboxSink.AddString("FileSink");
+	m_comboxSink.AddString("ConsoleSink");
+	m_comboxSink.AddString("DebugViewSink");
+	m_comboxSink.SetCurSel(0);
 
 	// 设置此对话框的图标。  当应用程序主窗口不是对话框时，框架将自动
 	//  执行此操作
@@ -245,7 +252,7 @@ void CUseLogDlg::OnBnClickedButton5()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	//ConsoleManager::Close();
-	CONSOLE_CLOSE;
+	LOG_WARN("这是一条警告日志");
 }
 
 
@@ -259,6 +266,13 @@ void CUseLogDlg::OnBnClickedButton6()
 void CUseLogDlg::OnBnClickedButton7()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	ConsoleManager::Open();
-	CONSOLE_OPEN;
+	LOG_ERROR("这是一条错误日志");
+}
+
+
+void CUseLogDlg::OnCbnSelchangeCombo2()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	int sink = m_comboxSink.GetCurSel();
+	LOG_SETSINK((Sink)sink);
 }

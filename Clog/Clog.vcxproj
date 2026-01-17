@@ -147,6 +147,7 @@
     <ClInclude Include="blockingconcurrentqueue.h" />
     <ClInclude Include="concurrentqueue.h" />
     <ClInclude Include="ConsoleManager.h" />
+    <ClInclude Include="ConsoleSink.h" />
     <ClInclude Include="CrashHandler.h" />
     <ClInclude Include="FileSink.h" />
     <ClInclude Include="framework.h" />
@@ -158,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleManager.cpp" />
+    <ClCompile Include="ConsoleSink.cpp" />
     <ClCompile Include="CrashHandler.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="FileSink.cpp" />

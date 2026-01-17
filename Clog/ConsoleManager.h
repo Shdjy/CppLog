@@ -1,12 +1,14 @@
 #pragma once
 #include <Windows.h>
 
-class CLOG_API ConsoleManager
+class ConsoleManager
 {
 public:
 	static void Open();
 	static void Close();
 	static bool IsOpen();
+	static WORD GetCurrentColor(HANDLE hConsole);
+	static void SetColorByLevel(LogLevel level);
 
 private:
 	static BOOL WINAPI CtrlHandler(DWORD ctrlType);
@@ -14,6 +16,7 @@ private:
 
 private:
 	static bool s_opened;
+	static HANDLE m_hConsole;
 };
 
 

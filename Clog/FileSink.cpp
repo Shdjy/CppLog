@@ -3,6 +3,15 @@
 
 FileSink::FileSink()
 {
+}
+
+//FileSink::FileSink(const std::string& sinkInfo)
+//{
+//
+//}
+
+FileSink::~FileSink()
+{
 
 }
 
@@ -15,6 +24,8 @@ void FileSink::Write(const LogMessage& log)
 		<< " [" << log.fileName << "] "
 		<< "[" << log.threadId << "] "
 		<< log.function
+		<< "() "
+		<< log.line
 		<< " : "
 		<< log.message
 		<< std::endl;

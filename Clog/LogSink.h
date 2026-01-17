@@ -4,8 +4,8 @@ class LogSink
 public:
 	virtual ~LogSink() = default;
 
-	virtual void Write(const LogMessage& msg) = 0;
-	virtual void Flush() = 0;
+	virtual void Write(const LogMessage& log) = 0;
+	virtual void Flush();
 
 	void SetSinkInfo(std::string info);
 	

@@ -13,6 +13,14 @@ enum class LogLevel
 	Fatal
 };
 
+enum class Sink
+{
+	FileSink = 0,
+	ConsoleSink,
+	DebugViewSink,
+	UDPSink,
+};
+
 //日志消息
 struct LogMessage
 {
@@ -22,5 +30,6 @@ struct LogMessage
 	std::string timestamp;
 	std::string function;
 	std::string message;
+	long line;
 };
 
