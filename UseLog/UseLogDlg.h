@@ -43,4 +43,17 @@ public:
 	afx_msg void OnBnClickedButton7();
 	CComboBox m_comboxSink;
 	afx_msg void OnCbnSelchangeCombo2();
+
+private:
+	bool StartUdpConsole(const std::wstring& exePath, const std::wstring& title, const std::wstring& ip, int port);
+	std::wstring CharToWString(const char* str);
+	std::string CStringToString(const CString& cs);
+	std::wstring GetExeDir();
+public:	
+	CEdit m_consoleTitleEdit;
+	CEdit m_udpAddrEdit;
+	CEdit m_udpPortEdit;
+	CString m_consoleTitle;
+	CString m_udpIp;
+	int m_udpPort;
 };

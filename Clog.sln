@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UseLogDLL", "UseLogDLL\UseL
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Clog", "Clog\Clog.vcxproj", "{B577CB23-6C3D-4DA1-8050-B97BD976E453}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LogUdpConsole", "LogUdpConsole\LogUdpConsole.vcxproj", "{916FA68A-C4A3-4F7C-9546-32C3F7EA80A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{B577CB23-6C3D-4DA1-8050-B97BD976E453}.Release|x64.Build.0 = Release|x64
 		{B577CB23-6C3D-4DA1-8050-B97BD976E453}.Release|x86.ActiveCfg = Release|Win32
 		{B577CB23-6C3D-4DA1-8050-B97BD976E453}.Release|x86.Build.0 = Release|Win32
+		{916FA68A-C4A3-4F7C-9546-32C3F7EA80A8}.Debug|x64.ActiveCfg = Debug|x64
+		{916FA68A-C4A3-4F7C-9546-32C3F7EA80A8}.Debug|x64.Build.0 = Debug|x64
+		{916FA68A-C4A3-4F7C-9546-32C3F7EA80A8}.Debug|x86.ActiveCfg = Debug|Win32
+		{916FA68A-C4A3-4F7C-9546-32C3F7EA80A8}.Debug|x86.Build.0 = Debug|Win32
+		{916FA68A-C4A3-4F7C-9546-32C3F7EA80A8}.Release|x64.ActiveCfg = Release|x64
+		{916FA68A-C4A3-4F7C-9546-32C3F7EA80A8}.Release|x64.Build.0 = Release|x64
+		{916FA68A-C4A3-4F7C-9546-32C3F7EA80A8}.Release|x86.ActiveCfg = Release|Win32
+		{916FA68A-C4A3-4F7C-9546-32C3F7EA80A8}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

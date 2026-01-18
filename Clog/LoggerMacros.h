@@ -9,6 +9,7 @@
 
 #define LOG_SETLEVEL(level) Logger::Instance().SetLogLevel(level)
 #define LOG_SETSINK(sink) Logger::Instance().SetSink(sink)
+#define LOG_SETUDPSINK(ip, port) Logger::Instance().SetUdpSinkIpPort(ip, port)
 
 
 

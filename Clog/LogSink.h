@@ -6,12 +6,15 @@ public:
 
 	virtual void Write(const LogMessage& log) = 0;
 	virtual void Flush();
-
+	virtual void SetIpPort(std::string ip, uint16_t port); 
 	void SetSinkInfo(std::string info);
+	
 	
 
 protected:
 	std::string m_sinkInfo;
+	std::string m_ip;
+	uint16_t m_port;
 
 	inline const char* LogLevelToString(LogLevel level)
 	{
@@ -35,4 +38,3 @@ protected:
 
 	}
 };
-

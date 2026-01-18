@@ -16,12 +16,19 @@
 #include "FileSink.h"
 #include "ConsoleSink.h"
 #include "ConsoleManager.h"
+#include "DebugViewSink.h"
+#include "UdpSink.h"
 
 #include <intrin.h>
 #include <sstream>
 #include <filesystem>
 #include <fstream>
 #include <memory>
+#include <thread>
+//#include <winsock2.h>
+//#include <ws2tcpip.h>
+//
+//#pragma comment(lib, "ws2_32.lib")
 
 
 namespace fs = std::filesystem;

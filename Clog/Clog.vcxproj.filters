@@ -54,6 +54,12 @@
     <ClInclude Include="ConsoleSink.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="DebugViewSink.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UdpSink.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -78,6 +84,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ConsoleSink.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugViewSink.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UdpSink.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

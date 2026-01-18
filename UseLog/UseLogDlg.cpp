@@ -55,6 +55,9 @@ END_MESSAGE_MAP()
 
 CUseLogDlg::CUseLogDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_USELOG_DIALOG, pParent)
+	, m_consoleTitle(_T("./"))
+	, m_udpIp(_T("127.0.0.1"))
+	, m_udpPort(9000)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -64,6 +67,12 @@ void CUseLogDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_COMBO1, m_comboxLevel);
 	DDX_Control(pDX, IDC_COMBO2, m_comboxSink);
+	DDX_Control(pDX, IDC_EDIT1, m_consoleTitleEdit);
+	DDX_Control(pDX, IDC_EDIT2, m_udpAddrEdit);
+	DDX_Control(pDX, IDC_EDIT3, m_udpPortEdit);
+	DDX_Text(pDX, IDC_EDIT1, m_consoleTitle);
+	DDX_Text(pDX, IDC_EDIT2, m_udpIp);
+	DDX_Text(pDX, IDC_EDIT3, m_udpPort);
 }
 
 BEGIN_MESSAGE_MAP(CUseLogDlg, CDialogEx)
@@ -119,6 +128,7 @@ BOOL CUseLogDlg::OnInitDialog()
 	m_comboxSink.AddString("FileSink");
 	m_comboxSink.AddString("ConsoleSink");
 	m_comboxSink.AddString("DebugViewSink");
+	m_comboxSink.AddString("UdpSink");
 	m_comboxSink.SetCurSel(0);
 
 	// 设置此对话框的图标。  当应用程序主窗口不是对话框时，框架将自动
@@ -204,7 +214,7 @@ void PrintThread()
 	{
 		LOG_INFO("循环输出日志no:" + std::to_string(no));
 		no++;
-		Sleep(1000);
+		Sleep(500);
 		if (no > 5)
 			break;
 	}
@@ -270,9 +280,125 @@ void CUseLogDlg::OnBnClickedButton7()
 }
 
 
-void CUseLogDlg::OnCbnSelchangeCombo2()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	int sink = m_comboxSink.GetCurSel();
-	LOG_SETSINK((Sink)sink);
+void CUseLogDlg::OnCbnSelchangeCombo2()  
+{  
+   // TODO: 在此添加控件通知处理程序代码  
+	UpdateData(true);
+   int sink = m_comboxSink.GetCurSel();  
+   CString sinkName;  
+   m_comboxSink.GetLBText(sink, sinkName);  
+
+   if (sinkName == "UdpSink")  
+   {  
+       // Fix for E0312: Explicitly convert ATL::CA2A to std::string  
+       std::string udpSinkIp = std::string(CT2A(m_udpIp.GetString()));  
+	   std::wstring consoleTitle = CharToWString(m_consoleTitle.GetString());
+       // Fix for C4003: Provide required arguments to LOG_SETUDPSINK  
+       LOG_SETUDPSINK(udpSinkIp, static_cast<uint16_t>(m_udpPort));
+	   std::wstring appPath = GetExeDir() + L"\\LogUdpConsole.exe";
+	   StartUdpConsole(appPath, consoleTitle, L"0.0.0.0", m_udpPort);
+   }  
+
+   // Fix for other sinks  
+   LOG_SETSINK((Sink)sink);  
 }
+
+bool CUseLogDlg::StartUdpConsole(const std::wstring& exePath, const std::wstring& title, const std::wstring& ip, int port)
+{
+	std::wstring cmdLine =
+		L"\"" + exePath + L"\" "
+		L"\"" + title + L"\" "
+		+ ip + L" "
+		+ std::to_wstring(port);
+
+	STARTUPINFOW si{};
+	PROCESS_INFORMATION pi{};
+
+	si.cb = sizeof(si);
+
+	BOOL ok = CreateProcessW(
+		nullptr,                    // lpApplicationName
+		&cmdLine[0],               // lpCommandLine（必须可写）
+		nullptr,
+		nullptr,
+		FALSE,
+		CREATE_NEW_CONSOLE,         // 新控制台窗口
+		nullptr,
+		nullptr,
+		&si,
+		&pi
+	);
+
+	if (!ok)
+	{
+		/*std::wcout << L"CreateProcess 失败, 错误码="
+			<< GetLastError() << std::endl;*/
+		LOG_ERROR("创建进程失败：" + GetLastError());
+		return false;
+	}
+
+	// 2. 关闭不需要的句柄
+	CloseHandle(pi.hThread);
+	CloseHandle(pi.hProcess);
+
+	return true;
+}
+
+std::wstring CUseLogDlg::CharToWString(const char* str)
+{
+	CA2W w(str, CP_ACP); // 或 CP_UTF8，取决于 str 编码
+	return std::wstring(w);
+	//if (str == nullptr)
+	//{
+	//	return L"";
+	//}
+
+	//int len = MultiByteToWideChar(
+	//	CP_UTF8,
+	//	0,
+	//	str,
+	//	-1,
+	//	nullptr,
+	//	0
+	//);
+
+	//std::wstring wstr(len, L'\0');
+
+	//MultiByteToWideChar(
+	//	CP_UTF8,
+	//	0,
+	//	str,
+	//	-1,
+	//	&wstr[0],
+	//	len
+	//);
+
+	//// 去掉末尾 \0
+	//if (!wstr.empty())
+	//{
+	//	wstr.pop_back();
+	//}
+
+	//return wstr;
+}
+
+std::wstring CUseLogDlg::GetExeDir()
+{
+	wchar_t path[MAX_PATH]{};
+	DWORD len = GetModuleFileNameW(nullptr, path, MAX_PATH);
+	if (len == 0)
+	{
+		return L"";
+	}
+
+	std::wstring fullPath(path, len);
+	size_t pos = fullPath.find_last_of(L"\\/");
+	if (pos == std::wstring::npos)
+	{
+		return L"";
+	}
+
+	// 返回目录，不包含文件名
+	return fullPath.substr(0, pos);
+}
+

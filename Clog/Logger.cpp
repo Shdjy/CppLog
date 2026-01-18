@@ -208,12 +208,27 @@ void Logger::SetSink(Sink sink)
 		m_impl->m_logSink->SetSinkInfo(m_sinkInfo);
 		break;
 	case Sink::DebugViewSink:
+		m_impl->m_logSink.reset(new DebugViewSink());
 		break;
 	case Sink::UDPSink:
+		m_impl->m_logSink.reset(new UdpSink());
+		m_impl->m_logSink->SetSinkInfo(m_sinkInfo);
+		m_impl->m_logSink->SetIpPort(m_udpSinkIp, m_port);
 		break;
 	default:
 		break;
 	}	
+}
+
+void Logger::SetSinkInfo(std::string sinkInfo)
+{
+	m_sinkInfo = sinkInfo;
+}
+
+void Logger::SetUdpSinkIpPort(std::string ip, uint16_t port)
+{
+	m_udpSinkIp = ip;
+	m_port = port;
 }
 
 void Logger::Flush()

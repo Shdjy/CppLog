@@ -12,7 +12,10 @@ FileSink::FileSink()
 
 FileSink::~FileSink()
 {
-
+	if (m_file.is_open())
+	{
+		m_file.close();
+	}
 }
 
 void FileSink::Write(const LogMessage& log)
@@ -39,6 +42,11 @@ void FileSink::Flush()
 	{
 		m_file.flush();
 	}
+}
+
+void FileSink::SetIpPort(std::string ip, uint16_t port)
+{
+
 }
 
 void FileSink::OpenLogFileIfNeeded()
