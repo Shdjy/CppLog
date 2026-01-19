@@ -28,7 +28,7 @@ void UdpSink::Write(const LogMessage& log)
 
 	std::ostringstream oss;
 
-	oss << log.timestamp
+	oss << ExtractTimeHMS(log.timestamp)
 		<< " [" << LogLevelToString(log.level) << "] "
 		<< " [" << log.fileName << "] "
 		<< "[" << log.threadId << "] "

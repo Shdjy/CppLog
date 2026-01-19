@@ -5,8 +5,7 @@
 #include <chrono>
 #include <iomanip>
 #include <thread>
-
-#include "concurrentqueue.h"
+#include "blockingconcurrentqueue.h"
 
 #include <windows.h>
 #include <DbgHelp.h>
@@ -20,7 +19,7 @@ public:
 	std::atomic<bool> running{ false };
 	std::thread worker;
 
-	moodycamel::ConcurrentQueue<LogMessage> queue;
+	moodycamel::BlockingConcurrentQueue<LogMessage> queue;
 
 	std::ofstream file;
 
@@ -36,29 +35,26 @@ public:
 public:
 	void WorkerThread()
 	{
+		LogMessage log;
+
 		while (running)
 		{
-			bool hasData = false;
-			LogMessage log;
-
-			while (queue.try_dequeue(log))
+			// 阻塞等待，带超时，方便安全退出
+			if (queue.wait_dequeue_timed(log, std::chrono::milliseconds(100)))
 			{
-				hasData = true;
 				m_logSink->Write(log);
-			}
 
-			if (hasData)
-			{
+				// 批量取，减少 Flush 次数
+				while (queue.try_dequeue(log))
+				{
+					m_logSink->Write(log);
+				}
+
 				m_logSink->Flush();
-			}
-			else
-			{
-				std::this_thread::sleep_for(std::chrono::milliseconds(2));
 			}
 		}
 
-		// 退出前清空残留日志
-		LogMessage log;
+		// 退出前清空剩余日志
 		while (queue.try_dequeue(log))
 		{
 			m_logSink->Write(log);
@@ -229,11 +225,6 @@ void Logger::SetUdpSinkIpPort(std::string ip, uint16_t port)
 {
 	m_udpSinkIp = ip;
 	m_port = port;
-}
-
-void Logger::Flush()
-{
-	std::this_thread::sleep_for(std::chrono::milliseconds(5));
 }
 
 void Logger::Shutdown()

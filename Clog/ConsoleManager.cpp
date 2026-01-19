@@ -86,10 +86,17 @@ void ConsoleManager::Close()
 	}
 
 	HWND hWnd = GetConsoleWindow();
-	if (hWnd != nullptr)
+	if (hWnd)
 	{
-		PostMessage(hWnd, WM_CLOSE, 0, 0);
+		ShowWindow(hWnd, SW_HIDE);   // ½öÓ°ÏìÊÓ¾õ
 	}
+
+	fflush(stdout);
+	fflush(stderr);
+
+	FILE* fp = nullptr;
+	freopen_s(&fp, "NUL:", "w", stdout);
+	freopen_s(&fp, "NUL:", "w", stderr);
 
 	FreeConsole();
 	s_opened = false;

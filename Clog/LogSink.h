@@ -9,7 +9,7 @@ public:
 	virtual void SetIpPort(std::string ip, uint16_t port); 
 	void SetSinkInfo(std::string info);
 	
-	
+	std::string ExtractTimeHMS(const std::string& timeStr);
 
 protected:
 	std::string m_sinkInfo;

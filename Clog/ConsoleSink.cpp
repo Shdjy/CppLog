@@ -19,7 +19,7 @@ void ConsoleSink::Write(const LogMessage& log)
 		FileSink::Flush();
 	}
 	ConsoleManager::SetColorByLevel(log.level);
-	std::cout << log.timestamp
+	std::cout << ExtractTimeHMS(log.timestamp)
 		<< " [" << LogLevelToString(log.level) << "] "
 		<< " [" << log.fileName << "] "
 		<< "[" << log.threadId << "] "

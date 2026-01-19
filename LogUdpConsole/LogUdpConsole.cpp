@@ -6,6 +6,17 @@
 
 #pragma comment(lib, "ws2_32.lib")
 
+std::wstring CharToWstring(const char* szIn)
+{
+	int length = MultiByteToWideChar(CP_ACP, 0, szIn, -1, NULL, 0);
+	WCHAR* buf = new WCHAR[length + 1];
+	ZeroMemory(buf, (length + 1) * sizeof(WCHAR));
+	MultiByteToWideChar(CP_ACP, 0, szIn, -1, buf, length);
+	std::wstring strRet(buf);
+	delete[] buf;
+	return strRet;
+}
+
 int main(int argc, char* argv[])
 {
 	Sleep(1000);
@@ -20,10 +31,7 @@ int main(int argc, char* argv[])
 	}
 
 	// 1. 设置控制台标题（Unicode）
-	std::wstring title;
-	int len = MultiByteToWideChar(CP_UTF8, 0, argv[1], -1, nullptr, 0);
-	title.resize(len);
-	MultiByteToWideChar(CP_UTF8, 0, argv[1], -1, &title[0], len);
+	std::wstring title = CharToWstring(argv[1]);
 	SetConsoleTitleW(title.c_str());
 
 	// 2. 解析参数
@@ -72,7 +80,7 @@ int main(int argc, char* argv[])
 	std::cout << "UDP 日志监听中: " << ip << ":" << port << std::endl;
 
 	// 6. 接收日志
-	char buf[204800];
+	char buf[2048];
 	while (true)
 	{
 		int lenRecv = recvfrom(s, buf, sizeof(buf) - 1, 0, nullptr, nullptr);

@@ -32,7 +32,6 @@ public:
 	void SetSinkInfo(std::string sinkInfo);
 	void SetUdpSinkIpPort(std::string ip, uint16_t port);
 
-	void Flush();
 	void Shutdown();
 
 private:

@@ -15,7 +15,6 @@ public:
     void SetIpPort(std::string ip, uint16_t port) override;
 
 private:
-
     void InitSocket();
    
 	SOCKET m_socket;
