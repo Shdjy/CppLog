@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
 	std::cout << "UDP 日志监听中: " << ip << ":" << port << std::endl;
 
 	// 6. 接收日志
-	char buf[204800];
+	char buf[2048];
 	while (true)
 	{
 		int lenRecv = recvfrom(s, buf, sizeof(buf) - 1, 0, nullptr, nullptr);
